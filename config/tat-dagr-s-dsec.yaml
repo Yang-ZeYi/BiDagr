@@ -1,0 +1,106 @@
+
+# ============================================================
+# 配置文件1: config/tat-dagr-s-dsec.yaml
+# TAT-DAGR-S (Small) 模型配置
+# ============================================================
+
+# 继承基础DAGR配置
+dataset_directory: "/home/yang/work/dagr/data"
+output_directory: "/home/yang/work/dagr/logs"
+
+task: detection
+dataset: dsec
+
+# ============================================================
+# 基础网络配置 (继承自dagr-s-dsec.yaml)
+# ============================================================
+radius: 0.01
+time_window_us: 1000000
+max_neighbors: 16
+n_nodes: 50000
+
+batch_size: 4
+
+activation: relu
+edge_attr_dim: 2
+aggr: sum
+kernel_size: 5
+pooling_aggr: max
+
+base_width: 0.5
+after_pool_width: 1
+net_stem_width: 0.5
+yolo_stem_width: 0.5
+num_scales: 2
+
+pooling_dim_at_output: 5x7
+
+img_net: resnet18
+
+# ============================================================
+# TAT-DAGR 特有配置
+# ============================================================
+
+# 时间对齐模块配置
+use_alignment: true
+alignment_mode: global  # global / spatial_adaptive / velocity_guided
+alignment_max_offset_ms: 20.0
+alignment_learnable_max_offset: true
+alignment_img_feature_dim: 256
+alignment_event_feature_dim: 4
+alignment_hidden_dim: 128
+
+# 轨迹跟踪模块配置
+use_tracking: true
+tracking_max_age: 30
+tracking_min_hits: 3
+tracking_iou_threshold: 0.3
+tracking_use_kalman: true
+tracking_use_cascade_matching: false
+
+# 损失权重配置
+alignment_loss_weight: 0.5
+trajectory_loss_weight: 0.3
+
+# 对齐损失细分权重
+alignment_consistency_weight: 0.5
+alignment_physics_weight: 0.2
+alignment_regularization_weight: 0.001
+
+# 轨迹损失细分权重
+trajectory_smooth_motion_weight: 0.3
+trajectory_prediction_consistency_weight: 0.4
+trajectory_velocity_consistency_weight: 0.2
+trajectory_length_reward_weight: 0.1
+
+# ============================================================
+# 训练配置
+# ============================================================
+
+# 学习率和优化器
+l_r: 0.0002
+weight_decay: 0.00001
+clip: 0.1
+tot_num_epochs: 100
+
+# 两阶段训练策略
+freeze_dagr_epochs: 10  # 前10个epoch冻结DAGR，只训练对齐模块
+
+# 数据增强
+aug_trans: 0.1
+aug_zoom: 1.5
+aug_p_flip: 0.5
+
+# 同步误差增强
+enable_sync_augmentation: true
+sync_aug_max_offset: 20.0
+sync_aug_prob: 0.8
+sync_aug_distribution: uniform  # uniform / gaussian
+sync_aug_adaptive: false
+
+# ============================================================
+# 测试配置
+# ============================================================
+save_tracks: true
+visualize: false
+compute_mot_metrics: true

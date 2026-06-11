@@ -1,0 +1,98 @@
+# ============================================================
+# ============================================================
+# 配置文件3: config/alignment_config.yaml
+# 时间对齐专用配置（用于消融实验）
+# ============================================================
+# ============================================================
+
+# 不同对齐策略的配置
+alignment_strategies:
+  # 策略1: 不使用对齐
+  none:
+    enable: false
+    mode: none
+  
+  # 策略2: 全局对齐（最简单）
+  global:
+    enable: true
+    mode: global
+    max_offset_ms: 20.0
+    hidden_dim: 128
+    learnable_max_offset: true
+  
+  # 策略3: 空间自适应对齐
+  spatial_adaptive:
+    enable: false
+    mode: spatial_adaptive
+    max_offset_ms: 20.0
+    grid_size: 8
+    hidden_dim: 256
+  
+  # 策略4: 速度引导对齐（最复杂）
+  velocity_guided:
+    enable: false
+    mode: velocity_guided
+    max_offset_ms: 30.0
+    use_optical_flow: true
+    hidden_dim: 256
+
+# 评估配置
+evaluation:
+  # 速度分段（km/h）
+  speed_bins:
+    - name: static
+      range: [0, 5]
+    - name: slow
+      range: [5, 30]
+    - name: medium
+      range: [30, 60]
+    - name: fast
+      range: [60, 200]
+  
+  # 对齐评估指标
+  alignment_metrics:
+    - offset_mae  # 偏移预测MAE
+    - map_improvement  # mAP提升
+    - iou_improvement  # IoU提升
+    - position_error  # 位置误差减少
+  
+  # 轨迹评估指标
+  tracking_metrics:
+    - MOTA  # Multi-Object Tracking Accuracy
+    - MOTP  # Multi-Object Tracking Precision
+    - IDF1  # ID F1 Score
+    - MT    # Mostly Tracked
+    - ML    # Mostly Lost
+    - FP    # False Positives
+    - FN    # False Negatives
+    - IDS   # ID Switches
+
+# 消融实验配置
+ablation_experiments:
+  # 实验1: Baseline (原始DAGR)
+  baseline:
+    use_alignment: false
+    use_tracking: false
+  
+  # 实验2: 只使用时间对齐
+  alignment_only:
+    use_alignment: true
+    use_tracking: false
+    alignment_mode: global
+  
+  # 实验3: 只使用轨迹跟踪
+  tracking_only:
+    use_alignment: false
+    use_tracking: true
+  
+  # 实验4: 联合使用（完整TAT-DAGR）
+  full_tat_dagr:
+    use_alignment: true
+    use_tracking: true
+    alignment_mode: global
+  
+  # 实验5: 高级对齐策略
+  advanced_alignment:
+    use_alignment: true
+    use_tracking: true
+    alignment_mode: spatial_adaptive

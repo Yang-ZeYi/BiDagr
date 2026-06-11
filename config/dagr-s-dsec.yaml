@@ -1,0 +1,59 @@
+dataset_directory: "/home/yang/work/dagr/data"
+output_directory: "/home/yang/work/dagr/logs"
+OUTPUT_ROOT : "/home/yang/work/dagr/outputs"
+task: detection
+dataset: dsec
+
+# network
+radius: 0.01
+time_window_us: 1000000
+max_neighbors: 16
+n_nodes: 50000
+
+batch_size: 4
+
+activation: relu
+edge_attr_dim: 2
+aggr: sum
+kernel_size: 5
+pooling_aggr: max
+
+base_width: 0.5
+after_pool_width: 1
+net_stem_width: 0.5
+yolo_stem_width: 0.5
+num_scales: 2
+
+# learning
+weight_decay: 0.00001
+clip: 0.1
+
+pooling_dim_at_output: 5x7
+
+aug_trans: 0.1
+aug_zoom: 1.5
+aug_p_flip: 0.5
+
+img_net: resnet18
+
+l_r: 0.0002
+tot_num_epochs: 50
+
+# ============ Plan D: Bidirectional Gating Configuration (disabled by default) ============
+use_bidirectional_gating: false
+gate_type: global
+gate_hidden_dim: 64
+gate_strength_init: 0.1
+gate_warmup_epochs: 5
+gate_spatial_bins: 8x8
+use_gating_in_eval: false
+# ===========================================================================================
+
+# ============ Plan A: Coarse-Grained Feedback Configuration (disabled by default) ==========
+use_bidirectional_feedback: false
+feedback_hidden_dim: 128
+feedback_strength_init: 0.1
+feedback_warmup_epochs: 5
+feedback_grid_size: 16x12
+use_feedback_in_eval: false
+# ===========================================================================================

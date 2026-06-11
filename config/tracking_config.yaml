@@ -1,0 +1,44 @@
+# ============================================================
+# ============================================================
+# 配置文件4: config/tracking_config.yaml
+# 轨迹跟踪专用配置
+# ============================================================
+# ============================================================
+
+# 卡尔曼滤波器配置
+kalman_filter:
+  state_dim: 8  # [x, y, w, h, vx, vy, vw, vh]
+  measurement_dim: 4  # [x, y, w, h]
+  process_noise: 0.1
+  measurement_noise: 1.0
+  
+  # 自适应卡尔曼
+  use_adaptive: false
+  adapt_rate: 0.1
+  occlusion_threshold: 5
+
+# 数据关联配置
+data_association:
+  method: hungarian  # hungarian / cascade
+  iou_threshold: 0.3
+  use_motion: true
+  max_distance: 50.0
+  
+  # 级联匹配阈值
+  cascade_iou_thresholds: [0.7, 0.5, 0.3]
+
+# 轨迹管理配置
+trajectory_manager:
+  max_age: 30  # 最大未更新帧数
+  min_hits: 3  # 确认轨迹所需的最小命中数
+  iou_threshold: 0.3
+  
+  # 轨迹状态转换
+  tentative_to_confirmed_hits: 3
+  confirmed_to_lost_age: 15
+
+# 轨迹后处理
+post_processing:
+  smooth_trajectory: true
+  interpolate_missing: true
+  max_interpolation_gap: 5

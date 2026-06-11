@@ -1,0 +1,58 @@
+# GAT-based DAGR configuration for DSEC dataset
+# Place this file at: config/dagr-gat-s-dsec.yaml
+
+dataset_directory: "/data/storage/daniel/aegnn/"
+output_directory: "/data/storage/daniel/aegnn/logs"
+
+task: detection
+dataset: dsec
+
+# Network architecture
+radius: 0.01
+time_window_us: 1000000
+max_neighbors: 16
+n_nodes: 50000
+
+batch_size: 64
+
+# GAT-specific parameters
+gat_heads: 8              # Number of attention heads for backbone
+gat_dropout: 0.1          # Dropout rate for attention coefficients
+gat_heads_detection: 4    # Number of attention heads for detection head
+
+# Basic network parameters
+activation: relu
+edge_attr_dim: 2
+aggr: add                 # Changed from 'sum' to 'add' for GAT
+kernel_size: 5            # Not used in GAT but kept for compatibility
+pooling_aggr: max
+
+base_width: 0.5
+after_pool_width: 1
+net_stem_width: 0.5
+yolo_stem_width: 0.5
+num_scales: 2
+
+# Learning parameters
+weight_decay: 0.00001
+clip: 0.1
+
+pooling_dim_at_output: 5x7
+
+# Data augmentation
+aug_trans: 0.1
+aug_zoom: 1.5
+aug_p_flip: 0.5
+
+# Image fusion (optional)
+use_image: false
+img_net: resnet18
+pretrain_cnn: false
+no_events: false
+
+# Learning rate
+l_r: 0.0002
+tot_num_epochs: 801
+
+# Experiment name
+exp_name: "dagr_gat_s"

@@ -1,0 +1,8 @@
+LICENSE
+setup.py
+src/dagr.egg-info/PKG-INFO
+src/dagr.egg-info/SOURCES.txt
+src/dagr.egg-info/dependency_links.txt
+src/dagr.egg-info/top_level.txt
+src/dagr/asynchronous/asy_tools/main.cu
+src/dagr/graph/ev_graph.cu
